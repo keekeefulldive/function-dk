@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width:device-width,initial-scale:1.0">
+    <title>function(dk)</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #060606;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!--
+        sudden genesis // frenetic growth // inevitable decay // ceaseless continuity
+
+        heck the rules, steal my code
+    -->
+
+    <canvas id="canvas">no go boss</canvas>
+
+    <script>
+
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+
+if (window.innerWidth > window.innerHeight) {
+    canvas.width = canvas.height = window.innerHeight;
+} else {
+    canvas.width = canvas.height = window.innerWidth;
+}
+
+ctx.fillStyle = 'rgb(0, 0, 0)';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+go();
+
+function go() {
+
+    var point = {
+        x: Math.floor(Math.random() * canvas.width) + 1,
+        y: (Math.floor(Math.random() * canvas.height / 3) * 2) + canvas.width / 3 + 1
+    }
+
+    var prevPoints = [];
+    var pointsCount = [];
+
+    var dots = [];
+
+    ctx.strokeStyle = 'rgb(128, 0, 128)';
+    ctx.lineWidth = 2;
+    var prevDir = null;
+
+    window.setTimeout(function() {
+        var pointInterval = window.setInterval(function() {
+
+            prevPoints[prevPoints.length] = {
+                x: point.x,
+                y: point.y
+            }
+            ctx.beginPath();
+            ctx.moveTo(point.x, point.y);
+
+            //  0 1 2
+            //  3   4
+            //  5 6 7
+            while (dir == prevDir) {
+                var dir = Math.floor(Math.random() * 8);
+            }
+            if (Math.floor(Math.random() * 1000) < 998) {
+                var xDist = Math.floor(Math.random() * 80);
+                var yDist = Math.floor(Math.random() * 50);
+            } else {
+                var xDist = Math.floor(Math.random() * 400);
+                var yDist = Math.floor(Math.random() * 250);
+            }
+            switch (dir) {
+                case 0:
+                    point.x -= xDist;
+                    point.y -= yDist;
+                    break;
+                case 1:
+                    point.y -= yDist;
+                    break;
+                case 2:
+                    point.x += xDist;
+                    point.y -= yDist;
+                    break;
+                case 3:
+                    point.x -= xDist;
+                    break;
+                case 4:
+                    point.x += xDist;
+                    break;
+                case 5:
+                    point.x -= xDist;
+                    point.y += yDist;
+                    break;
+                case 6:
+                    point.y += yDist;
+                    break;
+                case 7:
+                    point.x += xDist;
+                    point.y += yDist;
+                    break;
+            }
+
+            if (point.x > canvas.width) point.x = canvas.width;
+            if (point.x < 0) point.x = 0;
+            if (point.y > canvas.height) point.y = canvas.height;
+            if (point.y < canvas.height / 3) {
+                point.y = canvas.height / 3;
+                if (pointsCount < 10000) {
+                    ctx.fillStyle = 'rgb(128, 0, 128)';
+                    var dotY = point.y - Math.floor(Math.random() * 30);
+                    ctx.fillRect(point.x, dotY, 1, 1);
+                    ctx.fillStyle = 'rgb(0, 0, 0)';
+                    dots[dots.length] = {
+                        x: point.x,
+                        y: dotY
+                    };
+                }
+            }
+
+            ctx.lineTo(point.x, point.y);
+            ctx.strokeStyle = 'rgb(128, 0, 128)';
+            if (pointsCount < 10000) ctx.stroke();
+
+            pointsCount++;
+            if (pointsCount > 2000) {
+                ctx.strokeStyle = 'rgb(0, 0, 0)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(prevPoints[pointsCount - 2001].x, prevPoints[pointsCount - 2001].y);
+                ctx.lineTo(prevPoints[pointsCount - 2000].x, prevPoints[pointsCount - 2000].y);
+                ctx.stroke();
+                ctx.strokeStyle = 'rgb(128, 0, 128)';
+                ctx.lineWidth = 2;
+            }
+            if (pointsCount > 6000) {
+                ctx.strokeStyle = 'rgb(0, 0, 0)';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(prevPoints[pointsCount - 6001].x, prevPoints[pointsCount - 6001].y);
+                ctx.lineTo(prevPoints[pointsCount - 6000].x, prevPoints[pointsCount - 6000].y);
+                ctx.stroke();
+                ctx.strokeStyle = 'rgb(128, 0, 128)';
+                ctx.lineWidth = 2;
+            }
+            if (pointsCount > 16002) {
+                window.clearInterval(pointInterval);
+            }
+        }, 10);
+    }, 3000);
+
+    var circle = {
+        x: Math.floor(Math.random() * canvas.width) + 1,
+        y: Math.floor(Math.random() * (canvas.height / 3)) + 1,
+        rad: Math.floor(Math.random() * 40) + 5
+    }
+
+    var prevCircles = [];
+    var circleCount = 0;
+    var circleTime = 200;
+
+    window.setTimeout(function() {
+        var circleInterval = window.setInterval(function() {
+
+            if (circleCount < 525) drawCircle(circle.x, circle.y, circle.rad, 'rgb(0, 255, 0)', 'rgb(0, 0, 0)');
+
+            circleCount++;
+
+            prevCircles[prevCircles.length] = {
+                x: circle.x,
+                y: circle.y,
+                rad: circle.rad
+            }
+
+            circle.x += (Math.random() * 2 > 1 ? Math.floor(Math.random() * 100) : -Math.floor(Math.random() * 100));
+            circle.y += (Math.random() * 2 > 1 ? Math.floor(Math.random() * 80) : -Math.floor(Math.random() * 80));
+            circle.rad = Math.floor(Math.random() * 20) + 5;
+
+            if (circle.x + circle.rad > canvas.width) circle.x = canvas.width - 1 - circle.rad;
+            if (circle.x - circle.rad < 0) circle.x = 1 + circle.rad;
+            if (circle.y + circle.rad > canvas.height / 3) {
+                circle.y = (canvas.height / 3) - 1 - circle.rad;
+                if (circleCount < 525) {
+                    ctx.fillStyle = 'rgb(0, 255, 0)';
+                    var dotY = circle.y + circle.rad + Math.floor(Math.random() * 30)
+                    ctx.fillRect(circle.x, dotY, 1, 1);
+                    ctx.fillStyle = 'rgb(0, 0, 0)';
+                    dots[dots.length] = {
+                        x: circle.x,
+                        y: dotY
+                    };
+                }
+            }
+            if (circle.y - circle.rad < 0) circle.y = 1 + circle.rad;
+
+            if (circleCount > 70) {
+                var prevCircle = prevCircles[circleCount - 4];
+                drawCircle(prevCircle.x, prevCircle.y, prevCircle.rad - 1, 'rgb(0, 0, 0)');
+            }
+            if (circleCount > 100) {
+                var prevCircle = prevCircles[circleCount - 101];
+                drawCircle(prevCircle.x, prevCircle.y, prevCircle.rad, 'rgb(0, 0, 0)');
+            }
+            if (circleCount > 300) {
+                var prevCircle = prevCircles[circleCount - 301];
+                var prevLineWidth = ctx.lineWidth;
+                ctx.lineWidth = 3;
+                drawCircle(prevCircle.x, prevCircle.y, prevCircle.rad, 'rgb(0, 0, 0)');
+                ctx.lineWidth = prevLineWidth;
+            }
+            if (circleCount > 827) {
+                window.clearInterval(circleInterval);
+                var dotCount = 0;
+                var dotInterval = window.setInterval(function() {
+                    ctx.fillStyle = 'rgb(0, 0, 0)';
+                    // ctx.fillRect(dots[dotCount].x, dots[dotCount].y, 2, 2);
+                    dotCount++;
+                    if (dotCount > dots.length - 1) {
+                        window.clearInterval(dotInterval);
+                        window.setTimeout(go, 4000);
+                    }
+                }, 1);
+            }
+        }, circleTime);
+    }, 6000);
+
+}
+
+function drawCircle(x, y, rad, color) {
+    ctx.beginPath();
+    ctx.arc(x, y, rad, 0, 2 * Math.PI, false);
+    ctx.strokeStyle = color;
+    ctx.stroke();
+}
+
+    </script>
+</body>
+</html>
